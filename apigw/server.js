@@ -5,7 +5,7 @@ const typeDefs = `
   type Query {
     service1: [String]
     service2: String
-    service3: String
+    service3: [String]
   }
 `;
 
@@ -36,7 +36,17 @@ const resolvers = {
         return "Error al obtener datos de besoscerezas";
     }
   },
-    service3: () => "Hola, soy servicio3 Cachetada con Trucha !",
+    service3: async (parent, args, context, info) => {
+      console.log(context.token);
+      try {
+          const response = await axios.get('http://cachetadacontrucha:3001/truchas');
+          const data = response.data;
+          return [...data.truchas];
+      } catch (err) {
+          console.error("Error al obtener datos de truchas", err);
+          return [];
+      }
+  }
   },
 };
 
